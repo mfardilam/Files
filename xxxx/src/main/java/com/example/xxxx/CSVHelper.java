@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
@@ -32,27 +33,34 @@ public class CSVHelper {
 	  }
 
 	  public static List<DeveloperTutorial> csvToTutorials(InputStream is) {
-	    try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-	        CSVParser csvParser = new CSVParser(fileReader,
-	            CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());) {
-
+		  System.out.println("csvToRutorials");
+	    try {
+	    	BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+	        @SuppressWarnings("resource")
+			CSVParser csvParser = new CSVParser(fileReader,CSVFormat.RFC4180);	
 	      List<DeveloperTutorial> developerTutorialList = new ArrayList<>();
-
-	      Iterable<CSVRecord> csvRecords = csvParser.getRecords();
-
-	      for (CSVRecord csvRecord : csvRecords) {
+	      System.out.println("csvToRutorials1");
+	      CSVRecord csvRecords = csvParser.getRecords().get(0);
+	      System.out.println("xx:"+csvRecords.get(1));
+	      /*if (csvRecords instance of Collection<?>) {
+	    	  System.out.println(((Collection<?>)csvRecords).size());
+	    	}
+	      System.out.println("csvToRutorials2");
+	      /*for (CSVRecord csvRecord : csvRecords) {
 	    	  DeveloperTutorial developerTutorial = new DeveloperTutorial(
 	              Long.parseLong(csvRecord.get("Id")),
 	              csvRecord.get("Title"),
 	              csvRecord.get("Description"),
 	              Boolean.parseBoolean(csvRecord.get("Published"))
-	            );
-
+	            );System.out.println("estoy iterando");
+	    	  System.out.println("cosa id"+developerTutorial.getId());
+	    	  System.out.println("cosa:"+developerTutorial);
 	    	  developerTutorialList.add(developerTutorial);
-	      }
-
+	      }*/
+	      System.out.println("csvToRutorials3");
 	      return developerTutorialList;
 	    } catch (IOException e) {
+	    	System.out.println(e);
 	      throw new RuntimeException("fail to parse CSV file: " + e.getMessage());
 	    }
 	  }
